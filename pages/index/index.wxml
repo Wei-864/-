@@ -1,0 +1,89 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <!-- 顶部月度统计 -->
+  <view class="header">
+    <view class="month-selector">
+      <text class="arrow" bindtap="prevMonth">‹</text>
+      <text class="month-text">{{currentYear}}年{{currentMonth}}月</text>
+      <text class="arrow" bindtap="nextMonth">›</text>
+    </view>
+    <view class="total-box">
+      <text class="total-label">本月支出</text>
+      <text class="total-amount">¥{{monthTotal}}</text>
+    </view>
+  </view>
+
+  <!-- 账单列表 -->
+  <view class="list">
+    <view class="list-header">
+      <text>收支明细</text>
+      <text class="record-count">共{{records.length}}笔</text>
+    </view>
+    
+    <view wx:if="{{records.length === 0}}" class="empty">
+      <text>📭 本月暂无记录</text>
+    </view>
+
+    <view class="record-item" wx:for="{{records}}" wx:key="id">
+      <view class="record-left">
+        <view class="category-icon" style="background:{{item.color || '#4CAF50'}}">
+          {{item.category.charAt(0)}}
+        </view>
+        <view class="record-info">
+          <text class="category">{{item.category}}</text>
+          <text class="note">{{item.note || '无备注'}}</text>
+          <text class="date">{{item.record_date}}</text>
+        </view>
+      </view>
+      <view class="record-right">
+        <text class="amount">-¥{{item.amount}}</text>
+        <text class="delete-btn" bindtap="deleteRecord" data-id="{{item.id}}">×</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部添加按钮 -->
+  <view class="add-btn-wrapper">
+    <button class="add-btn" bindtap="showAddModal">+ 记一笔</button>
+  </view>
+
+  <!-- 添加记录弹窗 -->
+  <view class="modal" wx:if="{{showModal}}" bindtap="hideAddModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-title">📝 新增记录</view>
+      
+      <view class="form-group">
+        <text class="form-label">金额</text>
+        <input class="form-input" placeholder="请输入金额" type="digit" value="{{newAmount}}" bindinput="onAmountInput" />
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">类别</text>
+        <view class="category-select">
+          <text class="category-tag" wx:for="{{categories}}" wx:key="*this" 
+                data-cat="{{item}}" bindtap="selectCategory"
+                style="background:{{newCategory === item ? '#4CAF50' : '#e8e8e8'}};color:{{newCategory === item ? '#fff' : '#333'}}">
+            {{item}}
+          </text>
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">备注</text>
+        <input class="form-input" placeholder="可选填写备注" value="{{newNote}}" bindinput="onNoteInput" />
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{newDate}}" bindchange="onDateChange">
+          <view class="date-picker">{{newDate || '选择日期'}}</view>
+        </picker>
+      </view>
+      
+      <view class="modal-btns">
+        <button class="btn-cancel" bindtap="hideAddModal">取消</button>
+        <button class="btn-confirm" bindtap="addRecord">确认添加</button>
+      </view>
+    </view>
+  </view>
+</view>
