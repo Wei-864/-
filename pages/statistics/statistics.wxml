@@ -1,2 +1,48 @@
-<!--pages/statistics/statistics.wxml-->
-<text>pages/statistics/statistics.wxml</text>
+
+
+ <!-- pages/statistics/statistics.wxml -->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="title">📊 月度统计</text>
+    <view class="month-selector">
+      <text class="arrow" bindtap="prevMonth">‹</text>
+      <text class="month-text">{{currentYear}}年{{currentMonth}}月</text>
+      <text class="arrow" bindtap="nextMonth">›</text>
+    </view>
+  </view>
+
+  <!-- 汇总卡片 -->
+  <view class="summary">
+    <view class="summary-item">
+      <text class="label">总支出</text>
+      <text class="value">¥{{total}}</text>
+    </view>
+    <view class="summary-item">
+      <text class="label">记录笔数</text>
+      <text class="value">{{count}}笔</text>
+    </view>
+  </view>
+
+  <!-- 分类统计 -->
+  <view class="chart">
+    <view class="chart-title">📈 分类支出排行</view>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{statistics.length === 0}}" class="empty">
+      <text>暂无数据</text>
+    </view>
+
+    <!-- 分类列表 -->
+    <view class="chart-item" wx:for="{{statistics}}" wx:key="category">
+      <view class="chart-label">
+        <text>{{item.category}}</text>
+        <text>¥{{item.total}}</text>
+      </view>
+      <view class="chart-bar">
+        <view class="chart-fill" style="width:{{item.percent}}%;background:{{colors[index % colors.length]}}"></view>
+      </view>
+      <text class="chart-count">{{item.count}}笔</text>
+    </view>
+  </view>
+</view>
